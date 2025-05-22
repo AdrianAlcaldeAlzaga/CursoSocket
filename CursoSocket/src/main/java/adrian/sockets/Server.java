@@ -8,15 +8,19 @@ import java.net.Socket;
 import java.util.Observable;
 
 public class Server extends Observable implements Runnable{
+	
+	private int port;
+	
+	public Server(int port) {
+		this.port = port;
+	}
 
-	public static void main(String[] args) {
-		
+	@Override
+	public void run() {
 		ServerSocket server = null;
 		Socket sc = null;
 		DataInputStream in;
 		DataOutputStream out;
-		
-		final int port = 1500;
 		
 		try {
 			server = new ServerSocket(port);
@@ -31,13 +35,14 @@ public class Server extends Observable implements Runnable{
 				
 				// Recogemos los datos en base al socket del cliente
 				in = new DataInputStream(sc.getInputStream());
-				out = new DataOutputStream(sc.getOutputStream());
 				
 				String message = in.readUTF();
 				
 				System.out.println(message);
 				
-				
+				this.setChanged();
+				this.notifyObservers(message);
+				this.clearChanged();
 				
 				sc.close();
 				System.out.println("Cliente desconectado");
@@ -47,12 +52,6 @@ public class Server extends Observable implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
 		
 	}
 	

@@ -5,11 +5,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Client {
+public class Client implements Runnable{
 	
-	public static void main(String[] args) {
+	private int port;
+	private String message;
+	
+	public Client(int port, String message) {
+		this.port = port;
+		this.message = message;
+	}
+
+	@Override
+	public void run() {
 		final String host = "127.0.0.1";
-		final int port = 1500;
 		DataInputStream in;
 		DataOutputStream out;
 		
@@ -20,11 +28,9 @@ public class Client {
 			in = new DataInputStream(sc.getInputStream());
 			out = new DataOutputStream(sc.getOutputStream());
 			
-			out.writeUTF("Hola mundo desde cliente");
+			out.writeUTF(message);
 			
-			String message = in.readUTF();
 			
-			System.out.println(message);
 			
 			sc.close();
 			
